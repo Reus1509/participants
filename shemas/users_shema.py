@@ -1,4 +1,4 @@
-
+from datetime import datetime
 from typing import Literal
 from pydantic import BaseModel, EmailStr
 from typing import Optional
@@ -11,3 +11,6 @@ class SUser(BaseModel):
     name: str
     surname: str
     email: EmailStr
+    registration_date: datetime
+    width: Optional[float] = None
+    longitude: Optional[float] = None

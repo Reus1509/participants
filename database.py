@@ -10,5 +10,6 @@ engine = create_engine(
 
 sessionmaker = sessionmaker(bind=engine, class_=Session, expire_on_commit=False)
 
+
 class Base(DeclarativeBase):
     pass
