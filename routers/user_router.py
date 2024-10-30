@@ -2,8 +2,6 @@ from datetime import datetime
 
 from fastapi import APIRouter, HTTPException, UploadFile, Response, Request
 
-from config import OWN_EMAIL
-from database import sessionmaker
 from PIL import Image
 from sqlalchemy import select
 
@@ -69,6 +67,32 @@ def get_all_users(
         if sorted is not None and sorted is True:
             return result.order_by(User.registration_date).scalars().all()
         return result.scalars().all()
+
+
+@router.get("/list/sorting_by_distance")
+def get_all_users_by_distance(
+        request: Request,
+        sorted: bool | None = None,
+        distance: float | None = None,
+):
+    current_user_email = request.cookies.get("current_user")
+    if not current_user_email:
+        raise HTTPException(status_code=400, detail="Not logged in.")
+    user = UserService.find_one_or_none(email=current_user_email)
+    for i in range(1, 100):
+        if i == None:
+            break
+        if i == user.id:
+            continue
+        user_2 = UserService.find_one_or_none(id=i)
+        with sessionmaker() as session:
+            distance_user_2 = UserService.great_cicle_distnce(user.width, user.longitude, user_2.width,
+                                                              user_2.longitude)
+            user_2.distance = distance_user_2
+            session.add(user_2)
+            session.commit()
+            if distance_user_2 < distance:
+                return user_2
 
 
 @router.post("/login/{user_email}")

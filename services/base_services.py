@@ -1,19 +1,15 @@
+import math
 from email.mime.text import MIMEText
-from lib2to3.fixes.fix_input import context
+
 from smtplib import SMTP_SSL
 
 from fastapi import HTTPException
 from starlette.responses import JSONResponse
-from fastapi_mail import FastMail, MessageSchema
-from dns.e164 import query
-from mako.testing.helpers import result_lines
+
 from sqlalchemy import select, insert, delete
-from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.orm.sync import update
-from starlette.responses import HTMLResponse
 
 from config import OWN_EMAIL, OWN_EMAIL_PASSWORD
-from shemas.email_schema import EmailSchema
+
 import config
 
 from database import sessionmaker
@@ -97,3 +93,15 @@ class BaseService:
             return JSONResponse({"message": "Mail sent successfully"}, status_code=200)
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
+
+    @classmethod
+    def great_cicle_distnce(self, width_1, long_1, width_2, long_2):
+        EARTH_CIRC = 6378137
+        dLat = math.radians(width_2 - width_1)
+        dLon = math.radians(long_2 - long_1)
+
+        a = (math.sin(dLat / 2) * math.sin(dLat / 2) + math.cos(math.radians(width_1)) * math.cos(math.radians(
+            width_2)) * math.sin(dLon / 2) * math.sin(dLon / 2))
+        c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+        d = EARTH_CIRC * c
+        return d

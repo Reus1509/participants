@@ -13,6 +13,7 @@ class User(Base):
     registration_date = Column(DateTime)
     width = Column(DOUBLE)
     longitude = Column(DOUBLE)
+    distance = Column(Integer)
 
     def __str__(self):
         return f'Пользователь {self.email}.'

@@ -14,3 +14,4 @@ class SUser(BaseModel):
     registration_date: datetime
     width: Optional[float] = None
     longitude: Optional[float] = None
+    distance: Optional[int] = None
