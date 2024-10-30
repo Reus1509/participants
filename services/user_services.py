@@ -1,7 +1,4 @@
-from fastapi import Depends
-
 from models.users import User
-
 from services.base_services import BaseService
 
 

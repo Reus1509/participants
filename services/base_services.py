@@ -1,15 +1,12 @@
+"""Базовый файл с рабочими функциями"""
+
 import math
 from email.mime.text import MIMEText
-
 from smtplib import SMTP_SSL
-
 from fastapi import HTTPException
 from starlette.responses import JSONResponse
-
 from sqlalchemy import select, insert, delete
-
 from config import OWN_EMAIL, OWN_EMAIL_PASSWORD
-
 import config
 
 from database import sessionmaker

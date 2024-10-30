@@ -19,6 +19,7 @@ router = APIRouter(
 
 @router.post("/clients/create")
 def create_user(user: SUser):
+    """Эндпоинт создания нового участника"""
     existing_user = UserService.find_one_or_none(email=user.email)
     if existing_user:
         raise HTTPException(status_code=400, detail="Email already registered")
@@ -28,6 +29,7 @@ def create_user(user: SUser):
 
 @router.post("/add_avatar")
 async def add_user_avatar(request: Request, file: UploadFile):
+    """Эндпоинт добавления аватара с водяным знаком для залогиненного участника"""
     current_user_email = request.cookies.get("current_user")
     if not current_user_email:
         raise HTTPException(status_code=400, detail="Not logged in.")
@@ -56,6 +58,7 @@ def get_all_users(
         surname: str | None = None,
         sorted: bool | None = None,
 ):
+    """Эндпоин получения списка участников с фильтрами и сортировкой"""
     with sessionmaker() as session:
         if sex is not None:
             query = select(User).filter_by(sex=sex)
@@ -75,6 +78,7 @@ def get_all_users_by_distance(
         sorted: bool | None = None,
         distance: float | None = None,
 ):
+    """Эндпоинт получения пользователей расстояние между которым и залогиненным пользователем меньше заданной"""
     current_user_email = request.cookies.get("current_user")
     if not current_user_email:
         raise HTTPException(status_code=400, detail="Not logged in.")
@@ -97,6 +101,7 @@ def get_all_users_by_distance(
 
 @router.post("/login/{user_email}")
 def login_user(response: Response, user_email: str, ):
+    """ Эндпоинт входа пользователя, реализован добавлением email пользователя в куки """
     user = UserService.find_one_or_none(email=user_email)
     if not user:
         raise HTTPException(status_code=400, detail="Email not registered")
@@ -117,6 +122,7 @@ def get_me(request: Request):
 
 @router.post("/clients/{id}/match")
 def add_like(id: int, request: Request):
+    """ Эндпоинт лайков. При обоюдном лайке отправляется письмо на почту пользователя, которому поставили лайк. """
     current_user_email = request.cookies.get("current_user")
     if not current_user_email:
         raise HTTPException(status_code=400, detail="Not logged in.")
